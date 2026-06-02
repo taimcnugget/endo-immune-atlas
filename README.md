@@ -40,7 +40,7 @@ endo-immune-atlas/
     Snakefile
     rules/
         qc.smk
-        batch_correction.smk
+        integration.smk
         clustering_annotation.smk
         subset_immune_cells.smk
         immunosenescence.smk
@@ -49,7 +49,7 @@ endo-immune-atlas/
  scripts/
     01_endo_immune_atlas_data_collection.py
     02_endo_immune_atlas_qc.py
-    03_endo_immune_atlas_batch_correction.py
+    03_endo_immune_atlas_integration.py
     04_endo_immune_atlas_total_clustering.py
     05_endo_immune_atlas_subset_clustering.py
     06_endo_immune_atlas_immunosenescence.py
@@ -72,12 +72,12 @@ endo-immune-atlas/
 
 ```mermaid
 flowchart TD
-    gse[(GSE179640)]
-    gsm[(GSM6690475/76)]
+    gse[(Data collection:<br/> GSE179640)]
+    gsm[(Data collection:<br/> GSM6690475/76)]
 
     subgraph preprocess["Preprocessing"]
         qc[rule: qc]
-        batch[rule: batch_correction]
+        integration[rule: integration]
         cluster[rule: clustering_annotation]
         subset[rule: subset_immune_cells]
     end
@@ -93,11 +93,11 @@ flowchart TD
         preprocess_figures([Preprocessing Figures & Reports])
     end
 
-    gse --> qc --> batch --> cluster --> subset --> immuno --> ccc
+    gse --> qc --> integration --> cluster --> subset --> immuno --> ccc
     gsm --> spatial --> ccc
 
     qc --> preprocess_figures
-    batch --> preprocess_figures
+    integration --> preprocess_figures
     cluster --> preprocess_figures
     subset --> preprocess_figures
 
@@ -113,7 +113,7 @@ flowchart TD
     classDef output fill:#EF767A,stroke:#000,color:#000,font-weight:bold;
 
     class gse,gsm dataset;
-    class qc,batch,cluster,subset scRNAseq;
+    class qc,integration,cluster,subset scRNAseq;
     class immuno immunosenescence_analysis;
     class spatial spatial;
     class ccc cell_com;
@@ -128,7 +128,7 @@ flowchart TD
 |---|---|---|
 | 01_data_collection | AnnData | Data loading, AnnData generation, sample labeling |
 | 02_qc | Scanpy | Cell filtering, doublet removal |
-| 03_batch_correction | Scanpy, harmonypy | Normalization, HVG selection, PCA, Harmony |
+| 03_integration | Scanpy, harmonypy | Normalization, HVG selection, PCA, Harmony |
 | 04_total_clustering | Scanpy, CellTypist | UMAP, broad cell type annotation |
 | 05_subset_clustering | Scanpy, CellTypist | Immune subset, fine-resolution clustering |
 | 06_immunosenescence | Scanpy | Senescence scoring, SEN-high/low populations, DEG |

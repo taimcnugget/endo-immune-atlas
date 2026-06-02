@@ -1,0 +1,14 @@
+configfile: "config/config.yaml"
+
+include: "rules/data_collection.smk"
+include: "rules/qc.smk"
+include: "rules/integration.smk"
+include: "rules/total_clustering.smk"
+include: "rules/subset_clustering.smk"
+include: "rules/immunosenescence.smk"
+include: "rules/spatial_transcriptomics.smk"
+include: "rules/cellular_communication.smk"
+
+rule all:
+    input:
+        config["paths"]["figures"] 

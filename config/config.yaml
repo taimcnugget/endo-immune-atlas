@@ -1,0 +1,31 @@
+# -- PATHS
+paths:
+  base: "/content/drive/MyDrive/endo-immune-atlas"
+  raw_object:     "data/processed/GSE179640_raw.h5ad"
+  qc_object:      "data/processed/GSE179640_qc.h5ad"
+  batch_object:   "data/processed/GSE179640_batch.h5ad"
+  cluster_object: "data/processed/GSE179640_clustered.h5ad"
+  immune_object:  "data/processed/GSE179640_immune.h5ad"
+  sen_object:     "data/processed/GSE179640_senescence.h5ad"
+  spatial_object: "data/processed/GSE179640_spatial.h5ad"
+  results:        "results"
+  preprocess_figs: "results/preprocessing"
+  figures:        "results/figures"
+  logs:           "logs"
+
+# -- DATASET 
+dataset:
+  accession: "GSE179640"
+  spatial_samples:
+    - "GSM6690475"
+    - "GSM6690476"
+  exclude:
+    - "EOR" # organoids
+    - "EcPA" # ectopic adjacent
+
+# -- QC
+# -- INTEGRATION
+# -- CLUSTERING
+# -- IMMUNOSENESCENCE
+# -- SPATIAL
+# -- COMMUNICATION
