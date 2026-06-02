@@ -1,6 +1,8 @@
 import os
 BASE = os.environ.get("PIPELINE_BASE", config["paths"]["base"])
 rule data_collection:
+    input:
+        os.path.join(BASE, config["paths"]["raw_data"])
     output:
         os.path.join(BASE, config["paths"]["raw_object"])
     log:

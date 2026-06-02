@@ -1,6 +1,7 @@
 # -- PATHS
 paths:
   base: "/content/drive/MyDrive/endo-immune-atlas"
+  raw_data: "data/raw/GSE179640_Supp"
   raw_object:     "data/processed/GSE179640_raw.h5ad"
   qc_object:      "data/processed/GSE179640_qc.h5ad"
   batch_object:   "data/processed/GSE179640_batch.h5ad"
