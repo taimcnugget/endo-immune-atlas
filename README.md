@@ -41,7 +41,7 @@ endo-immune-atlas/
     rules/
         qc.smk
         integration.smk
-        clustering_annotation.smk
+        total_clustering.smk
         subset_immune_cells.smk
         immunosenescence.smk
         spatial_transcriptomics.smk
@@ -129,7 +129,7 @@ flowchart TD
 | 01_data_collection | AnnData | Data loading, AnnData generation, sample labeling |
 | 02_qc | Scanpy | Cell filtering, doublet removal |
 | 03_integration | Scanpy, harmonypy | Normalization, HVG selection, PCA, Harmony |
-| 04_total_clustering | Scanpy, CellTypist | UMAP, broad cell type annotation |
+| 04_total_clustering | Scanpy | UMAP, broad cell type annotation |
 | 05_subset_clustering | Scanpy, CellTypist | Immune subset, fine-resolution clustering |
 | 06_immunosenescence | Scanpy | Senescence scoring, SEN-high/low populations, DEG |
 | 07_spatial_transcriptomics | cell2location | Visium deconvolution, spatial immune mapping |
