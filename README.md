@@ -45,7 +45,10 @@ endo-immune-atlas/
         subset_immune_cells.smk
         immunosenescence.smk
         spatial_transcriptomics.smk
+        neighborhood_analysis.smk
+        niche_discovery.smk
         cell_cell_communication.smk
+        network_analysis.smk
  scripts/
     01_endo_immune_atlas_data_collection.py
     02_endo_immune_atlas_qc.py
@@ -54,7 +57,10 @@ endo-immune-atlas/
     05_endo_immune_atlas_subset_clustering.py
     06_endo_immune_atlas_immunosenescence.py
     07_endo_immune_atlas_spatial_transcriptomics.py
-    08_endo_immune_atlas_cellular_communication.py
+    08_endo_immune_atlas_neighborhood_analysis.py
+    09_endo_immune_atlas_niche_discovery.py
+    10_endo_immune_atlas_cellular_communication.py
+    11_endo_immune_atlas_network_analysis.py
  notebooks/          # exploratory analysis only
  data/
     raw/            # GEO downloads  not tracked by git
@@ -72,52 +78,71 @@ endo-immune-atlas/
 
 ```mermaid
 flowchart TD
-    gse[(Data collection:<br/> GSE179640)]
-    gsm[(Data collection:<br/> GSM6690475/76)]
+    gse[(scRNA-seq<br/>GSE179640)]
+    gsm[(Visium ST<br/>GSM6690475/76)]
 
-    subgraph preprocess["Preprocessing"]
-        qc[rule: qc]
-        integration[rule: integration]
-        cluster[rule: clustering_annotation]
-        subset[rule: subset_immune_cells]
+    subgraph preprocess["Single-Cell Atlas Construction"]
+        qc[qc]
+        integration[integration]
+        cluster[clustering_annotation]
+        subset[subset_immune_cells]
     end
 
-    subgraph downstream["Downstream Analyses"]
-        immuno[rule: immunosenescence]
-        spatial[rule: spatial_transcriptomics]
-        ccc[rule: cell_cell_communication]
+    subgraph cellstate["Cell-State Analysis"]
+        immuno[immunosenescence]
+    end
+
+    subgraph spatial["Spatial Analysis"]
+        spatial_map[spatial_transcriptomics]
+        neighborhood[neighborhood_analysis]
+        niche[niche_discovery]
+    end
+
+    subgraph systems["Systems Biology"]
+        ccc[cell_cell_communication]
+        network[network_analysis]
     end
 
     subgraph outputs["Outputs"]
-        figures([Final Figures & Reports])
-        preprocess_figures([Preprocessing Figures & Reports])
+        preprocess_figures([Preprocessing Reports])
+        final_figures([Final Figures & Reports])
     end
 
-    gse --> qc --> integration --> cluster --> subset --> immuno --> ccc
-    gsm --> spatial --> ccc
+    gse --> qc --> integration --> cluster --> subset --> immuno
+
+    gsm --> spatial_map
+
+    immuno --> spatial_map
+    spatial_map --> neighborhood
+    neighborhood --> niche
+    niche --> ccc
+    ccc --> network
 
     qc --> preprocess_figures
     integration --> preprocess_figures
     cluster --> preprocess_figures
     subset --> preprocess_figures
 
-    ccc --> figures
-    immuno --> figures
-    spatial --> figures
+    immuno --> final_figures
+    spatial_map --> final_figures
+    neighborhood --> final_figures
+    niche --> final_figures
+    ccc --> final_figures
+    network --> final_figures
 
     classDef dataset fill:#D3D3D3,stroke:#000,color:#000;
-    classDef scRNAseq fill:#BFD7ED,stroke:#000,color:#000;
-    classDef immunosenescence_analysis fill:#A5DFCD,stroke:#000,color:#000;
+    classDef scrna fill:#BFD7ED,stroke:#000,color:#000;
+    classDef state fill:#A5DFCD,stroke:#000,color:#000;
     classDef spatial fill:#F7B267,stroke:#000,color:#000;
-    classDef cell_com fill:#7D82B8,stroke:#000,color:#000;
+    classDef systems fill:#7D82B8,stroke:#000,color:#000;
     classDef output fill:#EF767A,stroke:#000,color:#000,font-weight:bold;
 
     class gse,gsm dataset;
-    class qc,integration,cluster,subset scRNAseq;
-    class immuno immunosenescence_analysis;
-    class spatial spatial;
-    class ccc cell_com;
-    class figures,preprocess_figures output;
+    class qc,integration,cluster,subset scrna;
+    class immuno state;
+    class spatial_map,neighborhood,niche spatial;
+    class ccc,network systems;
+    class preprocess_figures,final_figures output;
 ```
 
 ---
@@ -127,28 +152,18 @@ flowchart TD
 | Notebook | Tools | Description |
 |---|---|---|
 | 01_data_collection | AnnData | Data loading, AnnData generation, sample labeling |
-| 02_qc | Scanpy | Cell filtering, doublet removal |
-| 03_integration | Scanpy, harmonypy | Normalization, HVG selection, PCA, Harmony |
-| 04_total_clustering | Scanpy | UMAP, broad cell type annotation |
-| 05_subset_clustering | Scanpy, CellTypist | Immune subset, fine-resolution clustering |
-| 06_immunosenescence | Scanpy | Senescence scoring, SEN-high/low populations, DEG |
-| 07_spatial_transcriptomics | cell2location | Visium deconvolution, spatial immune mapping |
-| 08_cellular_communication | LIANA+ | Spatially-anchored ligand-receptor inference |
+| 02_qc | Scanpy | Quality control, cell filtering, doublet removal |
+| 03_integration | Scanpy, harmonypy | Dataset integration, batch correction, PCA |
+| 04_total_clustering | Scanpy | Broad cell type annotation |
+| 05_subset_clustering | Scanpy, CellTypist | Immune subsetting, fine-resolution clustering/annotation |
+| 06_immunosenescence | Scanpy | Senescence and dysfunction scoring, cell state classification, DEG analysis|
+| 07_spatial_transcriptomics | cell2location | Spatial deconvolution, spatial immune mapping within lesions |
+| 08_neighborhood analysis | Squidpy | Identification of spatially enriched cellular neighborhoods and cell-state co-localization patterns |
+| 09_niche_discovery | CellCharter | Discovery/characterization of multicellular tissue niches |
+| 10_cellular_communication | LIANA+ | Ligand-receptor inference between neighboring cell populations and tissue niches |
+| 11_network_analysis | NetworkX, igraph, pandas | Construction and analysis of cell-state interaction networks to identify key signaling hubs and microenvironmental programs |
 
 ---
-
-## Tools & Environment
-
-| Tool | Purpose |
-|---|---|
-| Snakemake | Pipeline workflow management |
-| Scanpy | scRNA-seq processing and clustering |
-| AnnData | Data object format |
-| harmonypy | Batch correction |
-| CellTypist | Automated cell type annotation |
-| cell2location | Spatial deconvolution |
-| LIANA+ | Cell-cell communication inference |
-| Squidpy | Spatial transcriptomics analysis |
 
 ### Setup
 
@@ -178,7 +193,24 @@ snakemake --cores 4
 
 ## Status
 
- Under active development
+Current phase: Spatial microenvironment analysis
+
+Completed:
+- Single-cell immune atlas construction
+- Immune cell annotation and lineage characterization
+- Immunosenescence and dysfunction scoring
+- Cell-state co-occurrence analysis
+- Differential expression analysis of senescent immune populations
+
+In progress:
+- Spatial deconvolution of endometriosis lesions
+- Identification of spatially organized immune microenvironments
+
+Next steps:
+- Cellular neighborhood analysis
+- Niche discovery
+- Cell-cell communication inference
+- Network characterization of senescent and dysfunctional tissue ecosystems
 
 ---
 
