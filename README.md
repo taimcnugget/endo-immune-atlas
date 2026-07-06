@@ -57,14 +57,15 @@ endo-immune-atlas/
     05_endo_immune_atlas_subset_clustering.py
     06_endo_immune_atlas_immunosenescence.py
     07_endo_immune_atlas_spatial_transcriptomics.py
-    08_endo_immune_atlas_neighborhood_analysis.py
-    09_endo_immune_atlas_niche_discovery.py
-    10_endo_immune_atlas_cellular_communication.py
-    11_endo_immune_atlas_network_analysis.py
+    08_endo_immune_atlas_spatial_neighborhood_analysis.py
+    09_endo_immune_atlas_immunosenescence_dysfunction.py
+    10_endo_immune_atlas_niche_discovery.py
+    11_endo_immune_atlas_cellular_communication.py
+    12_endo_immune_atlas_network_analysis.py
  notebooks/          # exploratory analysis only
  data/
-    raw/            # GEO downloads  not tracked by git
-    processed/      # pipeline intermediates  not tracked by git
+    raw/            # GEO downloads not tracked by git
+    processed/      # pipeline intermediates not tracked by git
  results/
     preprocessing/  # QC plots, UMAPs, cluster markers
     figures/        # final analysis figures
@@ -158,10 +159,11 @@ flowchart TD
 | 05_subset_clustering | Scanpy, CellTypist | Immune subsetting, fine-resolution clustering/annotation |
 | 06_immunosenescence | Scanpy | Senescence and dysfunction scoring, cell state classification, DEG analysis|
 | 07_spatial_transcriptomics | cell2location | Spatial deconvolution, spatial immune mapping within lesions |
-| 08_neighborhood analysis | Squidpy | Identification of spatially enriched cellular neighborhoods and cell-state co-localization patterns |
-| 09_niche_discovery | CellCharter | Discovery/characterization of multicellular tissue niches |
-| 10_cellular_communication | LIANA+ | Ligand-receptor inference between neighboring cell populations and tissue niches |
-| 11_network_analysis | NetworkX, igraph, pandas | Construction and analysis of cell-state interaction networks to identify key signaling hubs and microenvironmental programs |
+| 08_spatial_neighborhood_analysis | Squidpy | Identification of spatially enriched immune neighborhoods |
+| 09_spatial_immunosenescence | Squidpy | Identification of spatially enriched cellular neighborhoods and cell-state co-localization patterns |
+| 10_niche_discovery | CellCharter | Discovery/characterization of multicellular tissue niches |
+| 11_cellular_communication | LIANA+ | Ligand-receptor inference between neighboring cell populations and tissue niches |
+| 12_network_analysis | NetworkX, igraph, pandas | Construction and analysis of cell-state interaction networks to identify key signaling hubs and microenvironmental programs |
 
 ---
 
@@ -193,22 +195,22 @@ snakemake --cores 4
 
 ## Status
 
-Current phase: Spatial microenvironment analysis
-
 Completed:
 - Single-cell immune atlas construction
 - Immune cell annotation and lineage characterization
 - Immunosenescence and dysfunction scoring
 - Cell-state co-occurrence analysis
 - Differential expression analysis of senescent immune populations
-
-In progress:
 - Spatial deconvolution of endometriosis lesions
 - Identification of spatially organized immune microenvironments
+- Immunosenescence and dysfunction score mapping to endometriosis lesions 
+
+
+In progress:
+- Niche discovery
+
 
 Next steps:
-- Cellular neighborhood analysis
-- Niche discovery
 - Cell-cell communication inference
 - Network characterization of senescent and dysfunctional tissue ecosystems
 
@@ -223,5 +225,5 @@ Next steps:
 ## Author
 
 Tailynn Y. McCarty, PhD
-Computational Immunology | Women's Health  
+Biomedical Engineering | Computational Immunology | Systems Biology  
 [LinkedIn](www.linkedin.com/in/tailynn)  [GitHub](github.com/taimcnugget)
