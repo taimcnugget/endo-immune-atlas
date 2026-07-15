@@ -203,15 +203,16 @@ Completed:
 - Differential expression analysis of senescent immune populations
 - Spatial deconvolution of endometriosis lesions
 - Identification of spatially organized immune microenvironments
-- Immunosenescence and dysfunction score mapping to endometriosis lesions 
-
-
-In progress:
+- Immunosenescence and dysfunction score mapping to endometriosis lesions
 - Niche discovery
 
 
-Next steps:
+In progress:
 - Cell-cell communication inference
+
+
+
+Next steps:
 - Network characterization of senescent and dysfunctional tissue ecosystems
 
 ---
